@@ -158,6 +158,29 @@
     })();
   </script>
 
+  <script>async function loadReports() {
+      const res = await fetch("http://localhost:8001/api/reports");
+      const reports = await res.json();
+      const grid = document.getElementById("gallery-grid");
+      grid.innerHTML = "";
+
+      reports.forEach(r => {
+        grid.innerHTML += `
+      <div class="gallery-item card">
+        <div style="aspect-ratio: 4/3; overflow:hidden; border-radius:8px;">
+          <img src="http://localhost:8001${r.photo}" style="width:100%; height:100%; object-fit:cover;" />
+        </div>
+        <div class="info">
+          <strong>${r.title}</strong>
+          <p>${r.description}</p>
+          <small>${r.email} | Severity: ${r.severity}</small><br/>
+          <small>Location: ${r.lat}, ${r.lng}</small>
+        </div>
+      </div>`;
+      });
+    }
+    document.addEventListener("DOMContentLoaded", loadReports);
+  </script>
 </body>
 
 </html>

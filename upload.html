@@ -245,6 +245,27 @@
       };
     })();
   </script>
+
+
+  <script>document.getElementById("report-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const formData = new FormData(e.target);
+
+      const res = await fetch("http://localhost:8001/api/reports", {
+        method: "POST",
+        body: formData
+      });
+
+      const data = await res.json();
+      if (data.success) {
+        alert("Report submitted!");
+        e.target.reset();
+        window.location.href = "gallery.html";
+      } else {
+        alert("Error submitting report");
+      }
+    });
+  </script>
 </body>
 
 </html>
