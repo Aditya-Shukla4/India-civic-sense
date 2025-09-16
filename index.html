@@ -30,8 +30,8 @@
       </ul>
       <div style="display:flex; gap:.5rem; align-items:center">
         <span id="nav-user" class="badge" style="display:none"></span>
-        <a class="btn secondary" href="login.html">Login</a>
-        <a class="btn" href="register.html">Sign up</a>
+        <a id="login-link" class="btn secondary" href="login.html">Login</a>
+        <a id="reg-link" class="btn" href="register.html">Sign up</a>
       </div>
     </div>
   </nav>
@@ -148,6 +148,37 @@
       </div>
     </div>
   </footer>
+  <script>
+    (function () {
+      const token = localStorage.getItem('token');
+      const navUser = document.getElementById('nav-user');
+      const loginLink = document.getElementById('login-link');
+      const regLink = document.getElementById('reg-link');
+
+      if (token) {
+        // Show username
+        navUser.style.display = 'inline-block';
+        navUser.textContent = localStorage.getItem('username') || 'User';
+
+        // Replace login with logout
+        if (loginLink) {
+          loginLink.outerHTML = '<button onclick="logout()" class="btn secondary">Logout</button>';
+        }
+
+        // Remove signup link
+        if (regLink) {
+          regLink.remove();
+        }
+      }
+
+      // Logout function
+      window.logout = function () {
+        localStorage.removeItem('token');
+        localStorage.removeItem('username');
+        location.reload();
+      };
+    })();
+  </script>
 
 </body>
 

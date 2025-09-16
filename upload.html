@@ -6,11 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Report a Pothole</title>
   <link rel="stylesheet" href="assets/css/style.css" />
-  <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-  <!-- Leaflet JS
-  <script defer src="assets/js/app.js"></script>
-  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script> -->
 
   <style>
     /* ===== Overall Form & Cards ===== */
@@ -21,7 +17,6 @@
       box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
       transition: transform 0.2s, box-shadow 0.2s;
     }
-
 
     .card:hover {
       transform: translateY(-5px);
@@ -85,11 +80,9 @@
       }
     }
   </style>
-
 </head>
 
 <body>
-
   <nav class="site">
     <div class="container inner">
       <a class="brand" href="index.html">
@@ -104,30 +97,11 @@
       </ul>
       <div style="display:flex; gap:.5rem; align-items:center">
         <span id="nav-user" class="badge" style="display:none"></span>
-        <a class="btn secondary" href="login.html">Login</a>
-        <a class="btn" href="register.html">Sign up</a>
+        <a id="login-link" class="btn secondary" href="login.html">Login</a>
+        <a id="reg-link" class="btn" href="register.html">Sign up</a>
       </div>
     </div>
   </nav>
-  <script>
-    (function () {
-      const u = IP.currentUser();
-      const navUser = document.getElementById("nav-user");
-      if (u) {
-        navUser.style.display = "inline-block";
-        navUser.textContent = u.name || u.email;
-        const login = document.querySelector('a[href="login.html"]');
-        const reg = document.querySelector('a[href="register.html"]');
-        if (login) login.outerHTML = '<button class="btn secondary" onclick="IP.logout()">Logout</button>';
-        if (reg) reg.remove();
-      }
-      const here = location.pathname.split('/').pop();
-      document.querySelectorAll("nav a").forEach(a => {
-        if (a.getAttribute("href") === here) a.classList.add("active");
-      });
-    })();
-  </script>
-
 
   <section>
     <div class="container">
@@ -149,7 +123,7 @@
             <div>
               <label>Reporter Email</label>
               <input name="email" type="email" placeholder="you@example.com" />
-              <div class="help">If logged in, this will auto‑attach your email.</div>
+              <div class="help">If logged in, this will auto-attach your email.</div>
             </div>
             <div>
               <label>Severity</label>
@@ -175,7 +149,6 @@
             </div>
             <div>
               <button id="get_my_location">Get My Location</button>
-
             </div>
             <button class="btn" type="submit">Submit Report</button>
           </form>
@@ -193,7 +166,6 @@
 
   <script>
     document.addEventListener("DOMContentLoaded", function () {
-
       if (typeof L !== "undefined" && document.getElementById("map")) {
         var map = L.map('map').setView([20.5937, 78.9629], 5);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -210,13 +182,10 @@
         });
       }
 
-
       const button = document.getElementById('get_my_location');
-
       if (button) {
         button.addEventListener('click', (e) => {
           e.preventDefault();
-
           if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(showPosition, showError);
           } else {
@@ -237,12 +206,10 @@
     });
   </script>
 
-
-
   <footer>
     <div class="container grid">
       <div><strong>Indian Civic Sense</strong><br>
-        <small class="muted">This is an independent, front‑end‑only code for demo/testing.</small>
+        <small class="muted">This is an independent, front-end-only code for demo/testing.</small>
       </div>
       <div class="links">
         <a href="terms.html">Terms</a> ·
@@ -251,6 +218,33 @@
     </div>
   </footer>
 
+  <!-- ✅ Navbar Login/Logout Control -->
+  <script>
+    (function () {
+      const token = localStorage.getItem('token');
+      const navUser = document.getElementById('nav-user');
+      const loginLink = document.getElementById('login-link');
+      const regLink = document.getElementById('reg-link');
+
+      if (token) {
+        navUser.style.display = 'inline-block';
+        navUser.textContent = localStorage.getItem('username') || 'User';
+
+        if (loginLink) {
+          loginLink.outerHTML = '<button onclick="logout()" class="btn secondary">Logout</button>';
+        }
+        if (regLink) {
+          regLink.remove();
+        }
+      }
+
+      window.logout = function () {
+        localStorage.removeItem('token');
+        localStorage.removeItem('username');
+        location.reload();
+      };
+    })();
+  </script>
 </body>
 
 </html>

@@ -48,29 +48,12 @@
       </ul>
       <div style="display:flex; gap:.5rem; align-items:center">
         <span id="nav-user" class="badge" style="display:none"></span>
-        <a class="btn secondary" href="login.html">Login</a>
-        <a class="btn" href="register.html">Sign up</a>
+        <a id="login-link" class="btn secondary" href="login.html">Login</a>
+        <a id="reg-link" class="btn" href="register.html">Sign up</a>
       </div>
     </div>
   </nav>
-  <script>
-    (function () {
-      const u = IP.currentUser();
-      const navUser = document.getElementById("nav-user");
-      if (u) {
-        navUser.style.display = "inline-block";
-        navUser.textContent = u.name || u.email;
-        const login = document.querySelector('a[href="login.html"]');
-        const reg = document.querySelector('a[href="register.html"]');
-        if (login) login.outerHTML = '<button class="btn secondary" onclick="IP.logout()">Logout</button>';
-        if (reg) reg.remove();
-      }
-      const here = location.pathname.split('/').pop();
-      document.querySelectorAll("nav a").forEach(a => {
-        if (a.getAttribute("href") === here) a.classList.add("active");
-      });
-    })();
-  </script>
+
 
 
   <section>
@@ -107,6 +90,37 @@
       </div>
     </div>
   </footer>
+  <script>
+    (function () {
+      const token = localStorage.getItem('token');
+      const navUser = document.getElementById('nav-user');
+      const loginLink = document.getElementById('login-link');
+      const regLink = document.getElementById('reg-link');
+
+      if (token) {
+        // Show username
+        navUser.style.display = 'inline-block';
+        navUser.textContent = localStorage.getItem('username') || 'User';
+
+        // Replace login with logout
+        if (loginLink) {
+          loginLink.outerHTML = '<button onclick="logout()" class="btn secondary">Logout</button>';
+        }
+
+        // Remove signup link
+        if (regLink) {
+          regLink.remove();
+        }
+      }
+
+      // Logout function
+      window.logout = function () {
+        localStorage.removeItem('token');
+        localStorage.removeItem('username');
+        location.reload();
+      };
+    })();
+  </script>
 
 </body>
 
